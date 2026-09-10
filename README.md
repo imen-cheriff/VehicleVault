@@ -14,12 +14,10 @@ VehicleVault is a decentralized marketplace for listing, buying, and transferrin
 
 ## Built with
 
-| Layer | Choice |
-|---|---|
-| Frontend | React |
-| Chain interaction | ethers.js |
-| Smart contract | Solidity |
-| Styling | Plain CSS |
+- **Frontend:** React
+- **Chain interaction:** ethers.js
+- **Smart contract:** Solidity
+- **Styling:** Plain CSS
 
 ## Before you start
 
