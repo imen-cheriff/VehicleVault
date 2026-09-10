@@ -2,7 +2,7 @@
 
 VehicleVault is a decentralized marketplace for listing, buying, and transferring vehicles as on-chain assets. Every listing, sale, and ownership transfer is recorded on a Solidity smart contract — the frontend is just a window into it.
 
-![VehicleVault dashboard](./public/VehicleVault%20Dashboard.png)
+![VehicleVault dashboard](./public/VehicleVault.png)
 
 ## What it does
 
