@@ -1,96 +1,110 @@
 # VehicleVault
 
-VehicleVault is a decentralized marketplace for listing, buying, and transferring vehicles as on-chain assets. Every listing, sale, and ownership transfer is recorded on a Solidity smart contract — the frontend is just a window into it.
+VehicleVault is a decentralized marketplace for listing, purchasing, and transferring vehicles as on-chain assets. All listing, sale, and ownership-transfer logic is enforced by a Solidity smart contract, ensuring transparent and tamper-resistant transaction records. The frontend serves solely as a client interface to the underlying contract.
 
 ![VehicleVault dashboard](./public/VehicleVault.png)
 
-## What it does
+## Overview
 
-- **List a vehicle** — set a name, description, price in ETH, and image, and it's published to the marketplace
-- **Browse listings** — every item currently for sale is shown with its price and current owner
-- **Filter listings** — narrow results by name or price
-- **Purchase** — buy any listed item that isn't already yours, paid directly in ETH through the contract
-- **Manage your garage** — see everything you own, and transfer any item to another wallet address by entering their address and confirming
+- **Wallet Integration** — Establishes a secure connection to a blockchain wallet (e.g., MetaMask) for transaction signing and identity verification.
+- **Vehicle Listing** — Enables users to publish a vehicle to the marketplace with a name, description, price in ETH, and image.
+- **Marketplace Browsing** — Displays every active listing along with its price and current owner.
+- **Listing Filters** — Narrows visible listings by name or price range.
+- **Purchasing** — Allows any listed item not already owned by the connected wallet to be bought directly through the contract, with payment settled in ETH.
+- **Ownership Management** — Provides a dedicated view of owned assets, with the ability to transfer any item to another wallet address.
 
-## Built with
+## Technology Stack
 
 - **Frontend:** React
-- **Chain interaction:** ethers.js
-- **Smart contract:** Solidity
-- **Styling:** Plain CSS
+- **Blockchain Interaction:** ethers.js
+- **Smart Contract:** Solidity
+- **Styling:** CSS
 
-## Before you start
+## Prerequisites
 
-You'll need:
+Ensure the following are available in your development environment:
 
 - Node.js and npm
-- A browser wallet (MetaMask or similar)
-- Access to a deployed instance of the marketplace contract — either your own deployment or one someone has shared with you
+- A browser-based Ethereum wallet (MetaMask or equivalent)
+- A deployed instance of the marketplace smart contract on an Ethereum-compatible network
 
-The contract expects: `listItem`, `purchaseItem`, `transferItem`, `items`, `itemCount`, `getItemsByOwner`, and `owner`. If you're deploying fresh, your Solidity contract needs to expose all of these.
+The contract must expose the following interface: `listItem`, `purchaseItem`, `transferItem`, `items`, `itemCount`, `getItemsByOwner`, and `owner`.
 
-## Setting it up locally
+## Installation
 
-**1. Clone it**
+**1. Clone the repository**
 
 ```bash
 git clone https://github.com/<your-username>/vehiclevault.git
 cd vehiclevault
 ```
 
-**2. Install packages**
+**2. Install dependencies**
 
 ```bash
 npm install
 ```
 
-**3. Point it at your contract**
+**3. Configure the contract connection**
 
-Copy the example env file and drop in your own deployed contract address — this keeps your address out of the repo history:
+Duplicate the example environment file and populate it with your deployed contract's address. This ensures sensitive deployment details remain outside of version control.
 
 ```bash
 cp .env.example .env
 ```
 
-Then open `.env` and set:
+Then set the following variable in `.env`:
 
 ```
 REACT_APP_CONTRACT_ADDRESS=0xYourDeployedContractAddressHere
 ```
 
-**4. Run it**
+**4. Launch the application**
 
 ```bash
 npm start
 ```
 
-The app opens at `http://localhost:3000`. MetaMask will prompt you to connect a wallet on load — you'll need to be on the same network your contract is deployed to.
+The application will be accessible at `http://localhost:3000`. On load, MetaMask will prompt for wallet connection; ensure your wallet is set to the same network as the deployed contract.
 
-## Using the app
+## Usage
 
-**Connecting** — approve the MetaMask prompt when the page loads. Your address appears top-right; if it matches the contract's deployer, you'll see "Owner Account" instead.
+**Wallet connection** — Approve the connection request in your wallet extension upon page load. Your connected address is displayed in the top-right corner; if it matches the contract deployer's address, the interface will indicate "Owner Account" status.
 
-**Listing something** — fill out the form at the top (name, optional description, price in ETH, and an image URL) and hit *List Item*. This sends a transaction, so confirm it in your wallet.
+**Listing a vehicle** — Complete the form at the top of the page (name, optional description, price in ETH, and image URL), then submit via **List Item**. This action initiates an on-chain transaction and requires wallet confirmation.
 
-**Buying something** — every card under *Items for Sale* that isn't already yours shows a *Purchase* button. Clicking it sends the listed price in ETH to the seller through the contract.
+**Purchasing a vehicle** — Every card under *Items for Sale* that isn't already owned by the connected wallet displays a **Purchase** button. Selecting it sends the listed price in ETH to the seller through the contract.
 
-**Transferring something you own** — under *Your Own Items*, drop the recipient's wallet address into the field on the item's card and hit *Transfer*.
+**Transferring ownership** — Under *Your Own Items*, enter the recipient's wallet address on the relevant item's card and select **Transfer**.
 
-**Filtering** — click *Show Filters* to reveal a price range slider and a name search; *Clear Filters* resets both.
+**Filtering listings** — Select **Show Filters** to reveal a price range slider and a name search field; **Clear Filters** resets both.
 
-## How it's organized
+## Project Structure
 
 ```
 src/
-├── App.js       # all component logic and contract calls
-├── App.css      # app styling
-└── index.js     # React entry point
+├── App.js       # Core component logic and contract interaction
+├── App.css      # Application styling
+└── index.js     # React DOM rendering entry point
 ```
 
-## Security note
+## Smart Contract Interface
 
-Never commit a `.env` file or hardcode a private key anywhere in this project. `.env` is already listed in `.gitignore` — keep it that way.
+The application interacts with a Solidity contract responsible for managing vehicle listings, sales, and ownership records on-chain. Key methods include:
+
+- **`listItem(...)`** — Publishes a new vehicle listing to the marketplace under the caller's address.
+- **`purchaseItem(uint itemId)`** — Transfers ownership of the specified item to the buyer in exchange for the listed ETH price.
+- **`transferItem(uint itemId, address newOwner)`** — Reassigns ownership of an owned item to a specified recipient address.
+- **`getItemsByOwner(address owner)`** — Returns all items currently owned by the specified address.
+- **`items` / `itemCount`** — Expose the full set of listings and the total number of items recorded by the contract.
+- **`owner()`** — Returns the address designated as the contract owner.
+
+## Security Considerations
+
+- Never commit a `.env` file or hardcode private keys within the project. `.env` is included in `.gitignore` by default — this configuration should not be altered.
+- Ownership and transaction history recorded through this application are persisted on a public, immutable ledger. Treat listing details and wallet addresses accordingly.
+- Access control is enforced at the smart contract level; frontend validation alone should not be relied upon for security guarantees.
 
 ## License
 
-MIT — do what you like with it, just don't hold me liable for it.
+Distributed under the MIT License. Refer to the `LICENSE` file for full terms.
